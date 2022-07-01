@@ -38,7 +38,7 @@ def getNewProfileIDs(soup):
         profilesID.append(userID)
     return profilesID
 
-profilesID += getNewProfileIDs(BeautifulSoup(browser.page_source,features="html.parser"))
+profilesID = getNewProfileIDs(BeautifulSoup(browser.page_source,features="html.parser"))
 
 link = profilesID[2]
 
@@ -76,42 +76,63 @@ def get_info(link):
     print(connection)
 
     exp_ul = soup.findAll('section',{'class':"artdeco-card ember-view relative break-words pb3 mt2"})
-    if exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'About':
-        exp_div = exp_ul[3].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+    if (exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'About') or (exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'Activity'):
+        if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Featured':
+            exp_div = exp_ul[4].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+        else:
+            exp_div = exp_ul[3].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
     else:
         if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'About':
-
-            exp_div = exp_ul[2].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+            if exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'Featured':
+                exp_div = exp_ul[4].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+            else:
+                exp_div = exp_ul[2].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
         else:
             if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Activity':
                 exp_div = exp_ul[2].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
             else:
                 exp_div = exp_ul[1].findAll('li', {'class':'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
-
-    current_job_title = exp_div[0].find('div', {'class': 'display-flex align-items-center'})
-    current_job_title = current_job_title.find('span', {'class':'visually-hidden'}).get_text()
-    print(current_job_title)
-    company = exp_div[0].find('span', {'class':'t-14 t-normal'})
-    company = company.find('span', {'class':'visually-hidden'}).get_text()
-    print(company)
-    lenght_of = exp_div[0].find('span', {'class': 't-14 t-normal t-black--light'})
-    lenght_of = lenght_of.find('span', {'class':'visually-hidden'}).get_text()
-    print(lenght_of)
-    if exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'About':
-        edu_ul = exp_ul[4].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
-
+    if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Education':
+        edu_ul = exp_ul[1].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+        current_job_title = None
+        company = None
+        lenght_of = None
     else:
-        if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'About':
+        current_job_title = exp_div[0].find('div', {'class': 'display-flex align-items-center'})
+        current_job_title = current_job_title.find('span', {'class':'visually-hidden'}).get_text()
+        print(current_job_title)
+        company = exp_div[0].find('span', {'class':'t-14 t-normal'})
+        company = company.find('span', {'class':'visually-hidden'}).get_text()
+        print(company)
+        lenght_of = exp_div[0].find('span', {'class': 't-14 t-normal t-black--light'})
+        lenght_of = lenght_of.find('span', {'class':'visually-hidden'}).get_text()
+        print(lenght_of)
+        if (exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'About') or (exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'Activity'):
+            if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Featured':
 
-            edu_ul = exp_ul[3].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+                edu_ul = exp_ul[5].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+            else:
+                edu_ul = exp_ul[4].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
         else:
-            if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Activity':
-                edu_ul = exp_ul[3].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+            if (exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'About')or (exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Activity'):
+                if exp_ul[2].find('span', {'visually-hidden'}).get_text().strip() == 'Featured':
+                    edu_ul = exp_ul[5].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+                else:
+                    edu_ul = exp_ul[3].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+            else:
+                if exp_ul[1].find('span', {'visually-hidden'}).get_text().strip() == 'Activity':
+                    edu_ul = exp_ul[3].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+            if exp_ul[0].find('span', {'visually-hidden'}).get_text().strip() == 'About':
+                edu_ul = exp_ul[2].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
+        if exp_ul[0].find('span', {'visually-hidden'}).get_text().strip() == 'Activity':
+            edu_ul = exp_ul[2].findAll('li', {'class': 'artdeco-list__item pvs-list__item--line-separated pvs-list__item--one-column'})
 
     last_education = edu_ul[0].find('div', {'class': 'display-flex align-items-center'})
     last_education_university = last_education.find('span', {'class':'visually-hidden'}).get_text()
     degree = edu_ul[0].find('span', {'class': 't-14 t-normal'})
-    degree = degree.find('span', {'class':'visually-hidden'}).get_text()
+    if degree != None:
+
+        degree = degree.find('span', {'class':'visually-hidden'}).get_text()
 
 
 
@@ -119,7 +140,7 @@ def get_info(link):
 
     return ro
 
-user_info = profilesID.pop()
+
 conn = sqlite3.connect('linkedin.db')
 c = conn.cursor()
 c.execute("""CREATE TABLE Connections_info (
@@ -133,10 +154,17 @@ c.execute("""CREATE TABLE Connections_info (
             last_education,
             degree
             )""")
-while profilesID != []:
-    user_link = profilesID.pop()
-    l = get_info(user_link)
-    query ="""INSERT INTO Connections_info (
+
+for i in range(60, 95):
+    fulllink = 'https://www.linkedin.com/search/results/people/?network=%5B%22F%22%5D&origin=MEMBER_PROFILE_CANNED_SEARCH&page={}&sid=YSQ'.format(i)
+    browser.get(fulllink)
+    SCROLL_PAUSE_TIME = 5
+    time.sleep(SCROLL_PAUSE_TIME)
+    profilesID = getNewProfileIDs(BeautifulSoup(browser.page_source,features="html.parser"))
+    while profilesID != []:
+        user_link = profilesID.pop()
+        l = get_info(user_link)
+        query ="""INSERT INTO Connections_info (
                 user_name,
                 user_location,
                 profile_title,
@@ -147,6 +175,6 @@ while profilesID != []:
                 last_education,
                 degree
                 ) VALUES (?,?,?,?,?,?,?,?,?)"""
-    c.execute(query,l)
-    conn.commit()
+        c.execute(query,l)
+        conn.commit()
 conn.close()
