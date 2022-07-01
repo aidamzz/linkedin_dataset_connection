@@ -155,7 +155,7 @@ c.execute("""CREATE TABLE Connections_info (
             degree
             )""")
 
-for i in range(60, 95):
+for i in range(1, 95):
     fulllink = 'https://www.linkedin.com/search/results/people/?network=%5B%22F%22%5D&origin=MEMBER_PROFILE_CANNED_SEARCH&page={}&sid=YSQ'.format(i)
     browser.get(fulllink)
     SCROLL_PAUSE_TIME = 5
